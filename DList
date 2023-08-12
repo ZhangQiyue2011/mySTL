@@ -1,0 +1,984 @@
+#ifndef mySTL_include_DList
+#ifndef mySTL_512
+#include<iostream>
+#include<cstdlib>
+#include<cstring>
+#endif
+#include"ullint"
+
+template<class T>
+struct DList_Node
+{
+    DList_Node* last;
+    DList_Node* next;
+    T the_ele;
+    
+    //DList_Node(): last(nullptr), next(nullptr) {std::cout << "Gouzao DN!\n";}
+    DList_Node( T an_ele = T() ): the_ele(an_ele), last(nullptr), next(nullptr) {}
+    DList_Node(DList_Node<T> &node): the_ele(node.the_ele), last(/*node.last*/ nullptr), next(/*node.next*/ nullptr) {}
+    DList_Node(DList_Node<T>* node): the_ele(node->the_ele), last(/*node->last*/ nullptr), next(/*node->next*/ nullptr) {}
+};
+
+template<typename T>
+class DList
+{
+protected:
+    DList_Node<T>* head;
+protected:
+    DList(DList_Node<T>* zhead): head(zhead) {}
+public:
+    
+    DList(){
+        head = new DList_Node<T>();
+        head->last = head;
+        head->next = head;
+    }
+    DList(ullint ele)
+    {
+        //head = new DList_Node(an_ele);
+        //tail = new DList_Node(an_ele);
+        //DList_Node<T>* pot;
+        if (ele == 1ull)
+        {
+            head = new DList_Node<T>();
+            head->last = head;
+            head->next = head;
+            //size = 1ull;
+        }
+        else if (ele == 0ull)
+        {
+            head = (DList_Node<T>*)&head;
+        }
+        else
+        {
+            head = new DList_Node<T>();
+            DList_Node<T>* pot = head;
+            for (ullint i = 1; i < ele; i++)
+            {
+                pot->next = new DList_Node<T>();
+                pot->next->last = pot;
+                pot = pot->next;
+
+            }
+            pot->next = head;
+            head->last = pot;
+            //size = ele;
+            
+        }
+        
+        
+        
+        
+        
+    }
+    DList(T an_ele, ullint ele)
+    {
+        //head = new DList_Node(an_ele);
+        //tail = new DList_Node(an_ele);
+        //DList_Node<T>* pot;
+        if (ele == 1ull)
+        {
+            head = new DList_Node<T>(an_ele);
+            head->last = head;
+            head->next = head;
+            //size = 1ull;
+        }
+        else if (ele == 0ull)
+        {
+            head = (DList_Node<T>*)&head;
+        }
+        else
+        {
+            head = new DList_Node<T>(an_ele);
+            DList_Node<T>* pot = head;
+            for (ullint i = 1; i < ele; i++)
+            {
+                pot->next = new DList_Node<T>(an_ele);
+                pot->next->last = pot;
+                pot = pot->next;
+
+            }
+            pot->next = head;
+            head->last = pot;
+            //size = ele;
+            
+        }
+        
+    }
+    DList(const DList<T> &dli)
+    {
+        ullint ele = dli.ret_size();
+        
+        if (ele == 1ull)
+        {
+            head = new DList_Node<T>(dli.at_node(0ull));
+            head->last = head;
+            head->next = head;
+            //size = 1ull;
+        }
+        else if (ele == 0ull)
+        {
+            head = (DList_Node<T>*)&head;
+        }
+        
+        else
+        {
+            head = new DList_Node<T>(dli.at_node(0ull));
+            DList_Node<T>* pot = head;
+            for (ullint i = 1; i < ele; i++)
+            {
+                pot->next = new DList_Node<T>(dli.at_node(i));
+                pot->next->last = pot;
+                pot = pot->next;
+
+            }
+            pot->next = head;
+            pot->next->last = pot;
+            //size = ele;
+            
+        }
+        
+    }
+    #ifdef statement_Vector
+    template<class TT> friend class Vector;
+    #endif
+    #ifdef statement_Vector
+    DList(const Vector<T> &Vec)
+    {
+        ullint ele = Vec.ret_size();
+        
+        if (ele == 1ull)
+        {
+            head = new DList_Node<T>(Vec[0]);
+            head->last = head;
+            head->next = head;
+            //size = 1ull;
+        }
+        else if (ele == 0ull)
+        {
+            head = (DList_Node<T>*)&head;
+        }
+        
+        else
+        {
+            head = new DList_Node<T>(Vec[0]);
+            DList_Node<T>* pot = head;
+            for (ullint i = 1; i < ele; i++)
+            {
+                pot->next = new DList_Node<T>(Vec[i]);
+                pot->next->last = pot;
+                pot = pot->next;
+
+            }
+            pot->next = head;
+            pot->next->last = pot;
+            //size = ele;
+            
+        }
+    }
+    #endif
+    #ifdef statement_Deque
+    template<typename TT> friend class Deque;
+    #endif
+    #ifdef statement_Deque
+    DList(const Deque<T> &deq)
+    {
+        ullint ele = deq.ret_size();
+        
+        if (ele == 1ull)
+        {
+            head = new DList_Node<T>(deq.operator[](0));
+            head->last = head;
+            head->next = head;
+            //size = 1ull;
+        }
+        else if (ele == 0ull)
+        {
+            head = (DList_Node<T>*)&head;
+        }
+        
+        else
+        {
+            head = new DList_Node<T>(deq.operator[](0));
+            DList_Node<T>* pot = head;
+            for (ullint i = 1; i < ele; i++)
+            {
+                pot->next = new DList_Node<T>(deq.operator[](i));
+                pot->next->last = pot;
+                pot = pot->next;
+
+            }
+            pot->next = head;
+            pot->next->last = pot;
+            //size = ele;
+            
+        }
+    }
+    #endif
+    #ifdef statement_List
+    template<typename TT> friend class List;
+    #endif
+    #ifdef statement_List
+    DList(const List<T> &lis)
+    {
+        ullint ele = lis.ret_size();
+        
+        if (ele == 1ull)
+        {
+            head = new DList_Node<T>(lis[0]);
+            head->last = head;
+            head->next = head;
+            //size = 1ull;
+        }
+        else if (ele == 0ull)
+        {
+            head = (DList_Node<T>*)&head;
+        }
+        
+        else
+        {
+            head = new DList_Node<T>(lis[0]);
+            DList_Node<T>* pot = head;
+            for (ullint i = 1; i < ele; i++)
+            {
+                pot->next = new DList_Node<T>(lis[i]);
+                pot->next->last = pot;
+                pot = pot->next;
+
+            }
+            pot->next = head;
+            pot->next->last = pot;
+            //size = ele;
+            
+        }
+    }
+    #endif
+    DList<T> &operator=(const DList<T> &dli)
+    {
+        
+        if (this != &dli)
+        {
+            DList_Node<T>* pot = head;
+            DList_Node<T>* pdel;
+            ullint size = this->ret_size();
+            for (ullint i = 0; i < size; i++)
+            {
+                pdel = pot->next;
+                delete pot;
+                pot = pdel;
+            }
+            ullint ele = dli.ret_size();
+            
+            if (ele == 1ull)
+            {
+                head = new DList_Node<T>(dli.at_node(0ull));
+                head->last = head;
+                head->next = head;
+                //size = 1ull;
+            }
+            else if (ele == 0ull)
+            {
+                head = (DList_Node<T>*)&head;
+            }
+            
+            else
+            {
+                head = new DList_Node<T>(dli.at_node(0ull));
+                DList_Node<T>* pot = head;
+                for (ullint i = 1; i < ele; i++)
+                {
+                    pot->next = new DList_Node<T>(dli.at_node(i));
+                    pot->next->last = pot;
+                    pot = pot->next;
+
+                }
+                pot->next = head;
+                pot->next->last = pot;
+                //size = ele;
+                
+            }
+        }
+        return *this;
+    }
+    #ifdef statement_Vector
+    DList<T> &operator=(const Vector<T> &Vec)
+    {
+        DList_Node<T>* pot = head;
+        DList_Node<T>* pdel;
+        ullint size = this->ret_size();
+        for (ullint i = 0; i < size; i++)
+        {
+            pdel = pot->next;
+            delete pot;
+            pot = pdel;
+        }
+        ullint ele = Vec.ret_size();
+        
+        if (ele == 1ull)
+        {
+            head = new DList_Node<T>(Vec[0]);
+            head->last = head;
+            head->next = head;
+            //size = 1ull;
+        }
+        else if (ele == 0ull)
+        {
+            head = (DList_Node<T>*)&head;
+        }
+        
+        else
+        {
+            head = new DList_Node<T>(Vec[0]);
+            DList_Node<T>* pot = head;
+            for (ullint i = 1; i < ele; i++)
+            {
+                pot->next = new DList_Node<T>(Vec[i]);
+                pot->next->last = pot;
+                pot = pot->next;
+            }
+            pot->next = head;
+            pot->next->last = pot;
+            //size = ele;
+            
+        }
+        return *this;
+    }
+    #endif
+    #ifdef statement_Deque
+    DList<T> &operator=(const Deque<T> &deq)
+    {
+        DList_Node<T>* pot = head;
+        DList_Node<T>* pdel;
+        ullint size = this->ret_size();
+        if (size != 0ull)
+        {
+            for (ullint i = 0; i < size; i++)
+            {
+                pdel = pot->next;
+                delete pot;
+                pot = pdel;
+            }
+        }
+        ////
+        ullint ele = deq.ret_size();
+        
+        if (ele == 1ull)
+        {
+            head = new DList_Node<T>(deq.operator[](0));
+            head->last = head;
+            head->next = head;
+            //size = 1ull;
+        }
+        else if (ele == 0ull)
+        {
+            head = (DList_Node<T>*)&head;
+        }
+        
+        else
+        {
+            head = new DList_Node<T>(deq.operator[](0));
+            DList_Node<T>* pot = head;
+            for (ullint i = 1; i < ele; i++)
+            {
+                pot->next = new DList_Node<T>(deq.operator[](i));
+                pot->next->last = pot;
+                pot = pot->next;
+
+            }
+            pot->next = head;
+            pot->next->last = pot;
+            //size = ele;
+            
+        }
+        return *this;
+    }
+    #endif
+    #ifdef statement_List
+    DList<T> &operator=(const List<T> &lis)
+    {
+        DList_Node<T>* pot = head;
+        DList_Node<T>* pdel;
+        ullint size = this->ret_size();
+        if (size != 0ull)
+        {
+            for (ullint i = 0; i < size; i++)
+            {
+                pdel = pot->next;
+                delete pot;
+                pot = pdel;
+            }
+        }
+        ////
+        ullint ele = lis.ret_size();
+        
+        if (ele == 1ull)
+        {
+            head = new DList_Node<T>(lis[0]);
+            head->last = head;
+            head->next = head;
+            //size = 1ull;
+        }
+        else if (ele == 0ull)
+        {
+            head = (DList_Node<T>*)&head;
+        }
+        
+        else
+        {
+            head = new DList_Node<T>(lis[0]);
+            DList_Node<T>* pot = head;
+            for (ullint i = 1; i < ele; i++)
+            {
+                pot->next = new DList_Node<T>(lis[i]);
+                pot->next->last = pot;
+                pot = pot->next;
+
+            }
+            pot->next = head;
+            pot->next->last = pot;
+            //size = ele;
+            
+        }
+        return *this;
+    }
+    #endif
+    //template<typename TT>
+    //friend DList<TT> operator>>(const DList<TT> &dli, ullint n);
+    //template<typename TT>
+    //friend DList<TT> operator<<(const DList<TT> &dli, ullint n);
+    DList<T> shift(ullint n)
+    {
+        if ( ret_size() == 0ull )
+        {
+            return *this;
+        }
+        
+        DList<T> dlicp = *this;
+        for (ullint i = 0ull; i < n; ++i)
+        {
+            dlicp.head = dlicp.head->next;
+        }
+        return dlicp;
+    }
+    DList<T> shift_front(ullint n)
+    {
+        if ( ret_size() == 0ull)
+        {
+            return *this;
+        }
+        
+        DList<T> dlicp = *this;
+        for (ullint i = 0ull; i < n; ++i)
+        {
+            dlicp.head = dlicp.head->last;
+        }
+        return dlicp;
+    }
+    void ergodic()
+    {
+        if ( ret_size() == 0ull )
+        {
+            std::cout << std::endl;
+            return;
+        }
+        
+        DList_Node<T>* pot = head;
+        ullint size = this->ret_size();
+        for (ullint i = 0; i < size; i++)
+        {
+            std::cout << pot->the_ele << " ";
+            pot = pot->next;
+        }
+        std::cout << std::endl;
+        
+    }
+    void rev_ergodic()
+    {
+        if ( ret_size() == 0ull )
+        {
+            std::cout << std::endl;
+            return;
+        }
+        
+        DList_Node<T>* pot = head->last;
+        ullint size = this->ret_size();
+        for (ullint i = 0; i < size; i++)
+        {
+            std::cout << pot->the_ele << " ";
+            pot = pot->last;
+        }
+        std::cout << std::endl;
+        
+    }
+    void ergodic(ullint n)
+    {
+        if ( ret_size() == 0ull )
+        {
+            std::cout << std::endl;
+            return;
+        }
+        
+        DList_Node<T>* pot = head;
+        for (ullint i = 0; i < n; i++)
+        {
+            std::cout << pot->the_ele << " ";
+            pot = pot->next;
+        }
+        std::cout << std::endl;
+        
+    }
+    void rev_ergodic(ullint n)
+    {
+        if ( ret_size() == 0ull )
+        {
+            std::cout << std::endl;
+            return;
+        }
+        
+        DList_Node<T>* pot = head->last;
+        for (ullint i = 0; i < n; i++)
+        {
+            std::cout << pot->the_ele << " ";
+            pot = pot->last;
+        }
+        std::cout << std::endl;
+        
+    }
+    ullint ret_size() const
+    {
+        if (head == (DList_Node<T> *)&head)
+        {
+            return 0ull;
+        }
+        
+        DList_Node<T>* pot = head;
+        ullint res = 0;
+        while (1)
+        {
+            ++res;
+            if (pot->next == head)
+            {
+                break;
+            }
+            pot = pot->next;
+            
+        }
+        return res;
+        
+    }
+    T &operator[](ullint where) const
+    {
+        if (ret_size() == 0)
+        {
+            throw 0;
+        }
+        
+        DList_Node<T>* pot = head;
+        for (ullint i = 0; i < where; i++)
+        {
+            pot = pot->next;
+        }
+        return pot->the_ele;
+        
+    }
+    T &rev_at(ullint where) const
+    {
+        DList_Node<T>* pot = head->last;
+        for (ullint i = 0; i < where; i++)
+        {
+            pot = pot->last;
+        }
+        return pot->the_ele;
+        
+    }
+    DList_Node<T> * at_node(ullint where) const
+    {
+        DList_Node<T>* pot = head;
+        for (ullint i = 0; i < where; i++)
+        {
+            pot = pot->next;
+        }
+        return pot;
+    }
+    DList_Node<T> * rev_at_node(ullint where) const
+    {
+        DList_Node<T>* pot = head->last;
+        for (ullint i = 0; i < where; i++)
+        {
+            pot = pot->last;
+        }
+        return pot;
+    }
+    #ifdef statement_Vector
+    operator Vector<T>()
+    {
+        ullint size = this->ret_size();
+        Vector<T> res(  (T *)malloc( size * (ullint)sizeof(T) ), size );
+        //Vector<T> res;
+        //res.~Vector();
+        //res.size = this->ret_size();
+        //res.dyarr = (T *)malloc( res.size * (ullint)sizeof(T) );
+        DList_Node<T>* pot = head;
+        for (ullint i = 0ull; i < size; i++)
+        {
+            res.dyarr[i] = pot->the_ele;
+            pot = pot->next;
+        }
+        return res;
+        
+    }
+    #endif
+    #ifdef statement_Deque
+    operator Deque<T>()
+    {
+        DList_Node<T>* pot = this->head;
+        ullint size = this->ret_size() + 1;
+        T* dyarr = (T *)malloc( size * (ullint)sizeof(T) );
+        T* tpot;
+        for (ullint i = 0ull; i < size - 1ull; ++i)
+        {
+            tpot = dyarr + i;
+            tpot = new ( tpot )T(pot->the_ele);
+            pot = pot->next;
+        }
+        Deque<T> res(dyarr, size - 1, size - 1, size);
+    }
+    #endif
+    #ifdef statement_List
+    operator List<T>()
+    {
+        List_Node<T>* shead;
+        ullint ele = this->ret_size();
+
+        if (ele == 1ull)
+        {
+            shead = new List_Node<T>( this->operator[](0) );
+            shead->next = shead;
+            //size = 1ull;
+        }
+        else if (ele == 0ull)
+        {
+            List<T> res(0ull);
+            return res;
+        }
+        else
+        {
+            shead = new List_Node<T>( this->operator[](0) );
+            List_Node<T>* pot = shead;
+            DList_Node<T>* cpot = this->head->next;
+            for (ullint i = 1; i < ele; i++)
+            {
+                pot->next = new List_Node<T>(cpot->the_ele);
+                pot = pot->next;
+                cpot = cpot->next;
+
+            }
+            pot->next = shead;
+            //size = ele;
+            
+        }
+        List<T> res(shead);
+        return res;
+    }
+    #endif
+    void push(T an_ele = T())
+    {
+        if ( ret_size() == 0ull )
+        {
+            head = new DList_Node<T>(an_ele);
+            head->last = head;
+            head->next = head;
+            return;
+        }
+        
+        DList_Node<T>* oldtail = head->last;
+        head->last = new DList_Node<T>(an_ele);
+        head->last->next = head;
+        oldtail->next = head->last;
+        head->last->last = oldtail;
+    }
+    void push_front(T an_ele = T())
+    {
+        if ( ret_size() == 0ull )
+        {
+            head = new DList_Node<T>(an_ele);
+            head->last = head;
+            head->next = head;
+            return;
+        }
+        DList_Node<T>* tail = head->last;
+        DList_Node<T>* newhead = head->last = new DList_Node<T>(an_ele);
+        newhead->next = head;
+        tail->next = newhead;
+        newhead->last = tail;
+        head = newhead;
+    }
+    T pop()
+    {
+        ullint size = ret_size();
+        if (size == 0ull)
+        {
+            return T();
+        }
+        else if (size == 1ull)
+        {
+            T res = head->the_ele;
+            delete head;
+            head = (DList_Node<T>*)&head;
+            return res;
+        }
+        
+        DList_Node<T>* newtail = head->last->last;
+        T res = newtail->next->the_ele;
+        delete newtail->next;
+        newtail->next = head;
+        head->last = newtail;
+        return res;
+    }
+    T pop_front()
+    {
+        ullint size = ret_size();
+        if (size == 0ull)
+        {
+            return T();
+        }
+        else if (size == 1ull)
+        {
+            T res = head->the_ele;
+            delete head;
+            head = (DList_Node<T>*)&head;
+            return res;
+        }
+        DList_Node<T>* newhead = head->next;
+        T res = head->the_ele;
+        DList_Node<T>* tail = head->last;
+        delete head;
+        newhead->last = tail;
+        tail->next = newhead;
+        head = newhead;
+        return res;
+    }
+    void set_size(ullint ele)
+    {
+        ullint size = this->ret_size();
+        if (ele == 1ull)
+        {
+            T an_ele;
+            if (size == 0ull)
+            {
+                an_ele = T();
+            }
+            else
+            {
+                an_ele = head->the_ele;
+            }
+            this->~DList();
+            head = new DList_Node<T>(an_ele);
+            head->last = head;
+            head->next = head;
+            //size = 1ull;
+        }
+        else if (ele == 0ull)
+        {
+            if (size != 0ull)
+            {
+                this->~DList();
+                head = (DList_Node<T>*)&head;
+            }
+            
+        }
+        else
+        {
+            /*head = new DList_Node<T>(an_ele);
+            DList_Node<T>* pot = head;
+            for (ullint i = 1; i < ele; i++)
+            {
+                pot->next = new DList_Node<T>(an_ele);
+                pot->next->last = pot;
+                pot = pot->next;
+
+            }
+            pot->next = head;
+            head->last = pot;*/
+            /**/
+            //size = ele;
+            if (size == 0ull)
+            {
+                head = new DList_Node<T>();
+                DList_Node<T>* pot = head;
+                for (ullint i = 1; i < ele; i++)
+                {
+                    pot->next = new DList_Node<T>();
+                    pot->next->last = pot;
+                    pot = pot->next;
+
+                }
+                pot->next = head;
+                head->last = pot;
+            }
+            else if (size == 1ull)
+            {
+                T an_ele = head->the_ele;
+                this->~DList();
+                head = new DList_Node<T>(an_ele);
+                DList_Node<T>* pot = head;
+                for (ullint i = 1; i < ele; i++)
+                {
+                    pot->next = new DList_Node<T>();
+                    pot->next->last = pot;
+                    pot = pot->next;
+
+                }
+                pot->next = head;
+                head->last = pot;
+                //size = ele;
+            }
+            else if (size < ele)
+            {
+                DList_Node<T>* pot = head->last;
+                /*for (ullint i = 1; i < size; i++)
+                {
+                    pot = pot->next;
+                }*/
+                //pot = pot->next;
+                for (ullint i = size; i < ele; ++i)
+                {
+                    pot->next = new DList_Node<T>();
+                    pot->next->last = pot;
+                    pot = pot->next;
+                }
+                
+                pot->next = head;
+                head->last = pot;
+            }
+            else if (size > ele)
+            {
+                DList_Node<T>* pot = head;
+                for (ullint i = 1; i < ele; i++)
+                {
+                    pot = pot->next;
+                }
+                ////
+                DList_Node<T>* pot2 = pot->next;
+                DList_Node<T>* pdel;
+                ullint size = this->ret_size();
+                for (ullint i = ele; i < size; i++)
+                {
+                    pdel = pot2->next;
+                    delete pot2;
+                    pot2 = pdel;
+                }
+                //
+                
+                pot->next = head;
+                head->last = pot;
+            }
+            /**/
+            
+        }
+        return;
+    }
+    void insert(ullint where, T an_ele)
+    {
+        if ( ret_size() == 0ull )
+        {
+            head = new DList_Node<T>(an_ele);
+            head->last = head;
+            head->next = head;
+            return;
+        }
+        
+        /*DList_Node<T>* pot = this->at_node(where);
+        DList_Node<T>* oldnext = pot->next;
+        pot->next = new DList_Node<T>(an_ele);
+        pot->next->last = pot;
+        pot->next->next = oldnext;
+        oldnext->last = pot->next;*/
+        DList_Node<T>* pot = this->at_node(where);
+        DList_Node<T>* oldlast = pot->last;
+        pot->last = new DList_Node<T>(an_ele);
+        oldlast->next = pot->last;
+        pot->last->last = oldlast;
+        pot->last->next = pot;
+        if (where == 0ull || head->next == head)
+        {
+            head = head->last;
+        }
+        return;
+    }
+    T erase(ullint where)
+    {
+        if ( ret_size() == 0ull )
+        {
+            throw 0;
+        }
+        else if ( ret_size() == 1ull )
+        {
+            T res = head->the_ele;
+            delete head;
+            head = (DList_Node<T> *)&head;
+            return res;
+        }
+        
+        DList_Node<T>* pot = this->at_node(where);
+        DList_Node<T>* newlast = pot->last->last;
+        T res = pot->last->the_ele;
+        delete pot->last;
+        newlast->next = pot;
+        pot->last = newlast;
+        return res;
+        
+    }
+    ~DList()
+    {
+        DList_Node<T>* pot = head;
+        DList_Node<T>* pdel;
+        ullint size = this->ret_size();
+        if (size != 0ull)
+        {
+            for (ullint i = 0; i < size; i++)
+            {
+                pdel = pot->next;
+                delete pot;
+                pot = pdel;
+            }
+        }
+
+    }
+};
+
+template<typename T>
+DList<T> operator+(const DList<T> &lhs, const DList<T> &rhs)
+{
+    ullint lsiz = lhs.ret_size();
+    ullint rsiz = rhs.ret_size();
+    if (lsiz == 0ull && rsiz == 0ull)
+    {
+        DList<T> res(0ull);
+        return res;
+    }
+    else if (lsiz == 0ull)
+    {
+        return rhs;
+    }
+    else if (rsiz == 0ull)
+    {
+        return lhs;
+    }
+    DList<T> res(lsiz + rsiz);
+    for (ullint i = 0; i < lsiz; i++)
+    {
+        res[i] = lhs[i];
+    }
+    
+    for (ullint i = 0; i < rsiz; i++)
+    {
+        res[i + lsiz] = rhs[i];
+    }
+    return res;
+}
+#ifndef statement_DList
+#define statement_DList
+#endif
+#define mySTL_include_DList
+#endif

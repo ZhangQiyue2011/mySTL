@@ -1,0 +1,41 @@
+#ifndef mySTL_512
+#include<iostream>
+#include<cstdlib>
+#include<cstring>
+#include<cstdio>
+
+namespace mySTL
+{
+    template<typename T>
+    class Vector;
+    template<typename T>
+    class Deque;
+    template<typename T>
+    class DList;
+    template<typename T>
+    struct DList_Node;
+    template<typename T>
+    class List;
+    template<typename T>
+    struct List_Node;
+    class String;
+    template<typename T1, typename T2>
+    class Pair;
+    #define statement_Vector
+    #define statement_Deque
+    #define statement_DList
+    #define statement_List
+    #define statement_String
+    #define statement_Pair
+    #include"ullint"
+    #define mySTL_512 0
+    #include"Vector"
+    #include"Deque"
+    #include"DList"
+    #include"List"
+    #include"String"
+    #include"Pair"
+    #include"Sort"
+    #include"Unique"
+} // namespace mySTL
+#endif

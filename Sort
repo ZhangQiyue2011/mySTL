@@ -1,0 +1,57 @@
+#ifndef mySTL_512
+#ifndef ullint_type
+#include"ullint"
+#endif
+#endif
+    //
+    template<typename T, typename Container>
+    void Sort(Container &con, bool(*fp)(T, T) )
+    {
+        mySTL::ullint size = con.ret_size();
+        if ( con.ret_size() == 0ull || con.ret_size() == 1ull)
+        {
+            return;
+        }
+        
+        T tmpt;
+        for (mySTL::ullint i = 1ull; i < size; i++)
+        {
+            for (mySTL::ullint j = 1ull; j <= size - i; j++)
+            {
+                if ( fp(con[j], con[j - 1ull]) )
+                {
+                    tmpt = con[j];
+                    con[j] = con[j - 1ull];
+                    con[j - 1ull] = tmpt;
+                }
+            }
+            
+        }
+        return;
+        
+    }
+    template<typename Container, typename T2>
+    void Sort(Container &con, T2 ofunc)
+    {
+        mySTL::ullint size = con.ret_size();
+        if ( con.ret_size() == 0ull || con.ret_size() == 1ull)
+        {
+            return;
+        }
+        
+        Container tmpt(1ull);
+        for (mySTL::ullint i = 1ull; i < size; i++)
+        {
+            for (mySTL::ullint j = 1ull; j <= size - i; j++)
+            {
+                if ( ofunc(con[j], con[j - 1ull]) )
+                {
+                    tmpt[0ull] = con[j];
+                    con[j] = con[j - 1ull];
+                    con[j - 1ull] = tmpt[0ull];
+                }
+            }
+            
+        }
+        return;
+    }

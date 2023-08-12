@@ -1,0 +1,514 @@
+#ifndef mySTL_include_String
+#include"DList"
+#ifndef mySTL_512
+#include<cstring>
+#include<cstdio>
+#endif
+
+class String : public DList<char>
+{
+public:
+    String(): DList<char>(0ull) {}
+    String(char an_ele, ullint ele): DList<char>(an_ele, ele) {}
+    String(ullint ele): DList<char>( ele ) {}
+    String(const char* a) : DList<char>(strlen(a))
+    {
+        ullint size = strlen(a);
+        for (ullint i = 0ull; i < size; i++)
+        {
+            this->DList<char>::operator[](i) = a[i];
+        }
+        
+    }
+    String &operator=(const String &str)
+    {
+        if (this != &str)
+        {
+            //this->~String();
+            DList_Node<char>* pot = head;
+            DList_Node<char>* pdel;
+            ullint size = this->ret_size();
+            for (ullint i = 0; i < size; i++)
+            {
+                pdel = pot->next;
+                delete pot;
+                pot = pdel;
+            }
+            ////
+            ullint ele = str.ret_size();
+            
+            if (ele == 1ull)
+            {
+                head = new DList_Node<char>(str.at_node(0ull));
+                head->last = head;
+                head->next = head;
+                //size = 1ull;
+            }
+            else if (ele == 0ull)
+            {
+                head = (DList_Node<char>*)&head;
+            }
+            
+            else
+            {
+                head = new DList_Node<char>(str.at_node(0ull));
+                DList_Node<char>* pot = head;
+                for (ullint i = 1; i < ele; i++)
+                {
+                    pot->next = new DList_Node<char>(str.at_node(i));
+                    pot->next->last = pot;
+                    pot = pot->next;
+
+                }
+                pot->next = head;
+                pot->next->last = pot;
+                //size = ele;
+                
+            }
+        }
+        return *this;
+    }
+    String operator=(const char* a)
+    {
+        this->~String();
+        ////
+        ullint ele = strlen(a);
+            
+        if (ele == 1ull)
+        {
+            head = new DList_Node<char>(*a/*char*/);
+            head->last = head;
+            head->next = head;
+            //size = 1ull;
+        }
+        else if (ele == 0ull)
+        {
+            head = (DList_Node<char>*)&head;
+        }
+        
+        else
+        {
+            head = new DList_Node<char>(*a/*char*/);
+            DList_Node<char>* pot = head;
+            for (ullint i = 1; i < ele; i++)
+            {
+                pot->next = new DList_Node<char>(a[i]);
+                pot->next->last = pot;
+                pot = pot->next;
+
+            }
+            pot->next = head;
+            pot->next->last = pot;
+            //size = ele;
+            
+        }
+        ////
+        ullint size = strlen(a);
+        for (ullint i = 0ull; i < size; i++)
+        {
+            this->DList<char>::operator[](i) = a[i];
+        }
+        return *this;
+    }
+    char &operator[](ullint where)
+    {
+        ullint min_size = ret_min_size();
+        if (min_size == 0)
+        {
+            throw 0;
+        }
+        where %= min_size;
+        return this->DList<char>::operator[](where);
+    }
+    String cut_str(ullint start, ullint lon)
+    {
+        this->set_min_size();
+        if (lon == 0ull)
+        {
+            return "";
+        }
+        if (start + lon > this->ret_min_size())
+        {
+            throw std::out_of_range("\"start + lon\" is bigger than size!\n");
+        }
+        
+        String str = "";
+        DList_Node<char>* pot = this->at_node(start);
+        for (ullint i = 0ull; i < lon; i++)
+        {
+            str.push(pot->the_ele);
+            pot = pot->next;
+        }
+        return str;
+    }
+    ullint find(String str, ullint start = 0ull)
+    {
+        this->set_min_size();
+        str.set_min_size();
+        ullint size = this->ret_min_size();
+        ullint strsize = str.ret_min_size();
+        if (str.ret_min_size() == 0ull)
+        {
+            return 0ull;
+        }
+        if (strsize > size)
+        {
+            throw 18446744073709551615ull;
+        }
+        String comp;
+        for (ullint i = start; i < size - strsize; ++i)
+        {
+            /* code next day: operator=() */
+            comp = cut_str(i, strsize);
+            if (comp == str)
+            {
+                return i;
+            }
+            
+        }
+        throw 18446744073709551615ull; 
+        return 0ull;/**/
+    }
+    void push(char an_ele = char())
+    {
+        this->set_min_size();
+        this->DList<char>::push(an_ele);
+    }
+    void push_front(char an_ele = char())
+    {
+        this->set_min_size();
+        this->DList<char>::push_front(an_ele);
+    }
+    char pop()
+    {
+        this->set_min_size();
+        return this->DList<char>::pop();
+    }
+    char pop_front()
+    {
+        this->set_min_size();
+        return this->DList<char>::pop_front();
+    }
+    void set_size(ullint ele)
+    {
+        this->DList<char>::set_size(this->ret_min_size() + 1ull);
+        this->head->last->the_ele = '\0';
+        this->DList<char>::set_size(ele);
+    }
+    ullint ret_min_size() const
+    {
+        if (head == (DList_Node<char> *)&head)
+        {
+            return 0ull;
+        }
+        DList_Node<char>* pot = head;
+        ullint res = 0;
+        while (1)
+        {
+            if (pot->the_ele == '\0')
+            {
+                break;
+            }
+            ++res;
+            if (pot->next == head)
+            {
+                break;
+            }
+            pot = pot->next;
+            
+        }
+        return res;
+    }
+    void set_min_size()
+    {
+        this->DList<char>::set_size(this->ret_min_size());
+    }
+    friend std::ostream &operator<<(std::ostream &out, String A);
+    friend std::istream &operator>>(std::istream &in, String &A);
+    friend bool operator==(String A, String B);
+    friend bool operator!=(String A, String B);
+    friend bool operator<=(String A, String B);
+    ~String()
+    {}
+};
+
+std::ostream &operator<<(std::ostream &out, String A)
+{
+    ullint size = A.ret_size();
+    DList_Node<char>* pot = A.head;
+    for (int i = 0; i < size; i++)
+    {
+        if (pot->the_ele == '\0')
+        {
+            break;
+        }
+        std::cout << pot->the_ele;
+        pot = pot->next;
+    }
+    return out;
+    
+}
+
+std::istream &operator>>(std::istream &in, String &A)
+{
+    A = "";
+    char tch;
+    bool flag = false;
+    while (1)
+    {
+        //std::cout << "start\n";
+        tch = getchar();
+        A.push(tch);
+        //A.head->last->the_ele = tch;
+        if (tch == '\0')
+        {
+            break;
+        }
+        if (tch == '\n')
+        {
+            A.head->last->the_ele = '\0';
+            break;
+        }
+        if (tch == ' ')
+        {
+            A.head->last->the_ele = '\0';
+            if (flag == true)
+            {
+                break;
+            }
+            else
+            {
+                continue;
+            }
+        }
+        flag = true;
+        //std::cout << "finish" << i << "\n";
+    }
+    
+    return in;
+    
+}
+
+bool operator==(String A, String B)
+{
+    A.set_min_size();
+    B.set_min_size();
+    ullint size = A.ret_min_size();
+    if (size != B.ret_min_size())
+    {
+        return false;
+    }
+    if (size == 0ull)
+    {
+        return true;
+    }
+    //std::cout << "LbLbLb\n";
+    //std::cout << "aho\n";
+    DList_Node<char>* apot = A.at_node(0ull);
+    //std::cout << "aho\n";
+    DList_Node<char>* bpot = B.at_node(0ull);
+    //std::cout << "aho\n";
+    if (apot->the_ele != bpot->the_ele)
+    {
+        //std::cout << "aho\n";
+        return false;
+    }
+    apot = apot->next;
+    bpot = bpot->next;
+    while (apot != A.at_node(0ull))
+    {
+        if (apot->the_ele != bpot->the_ele)
+        {
+            return false;
+        }
+        apot = apot->next;
+        bpot = bpot->next;
+            
+    }
+    return true;
+}
+
+bool operator!=(String A, String B)
+{
+    A.set_min_size();
+    B.set_min_size();
+    ullint size = A.ret_min_size();
+    if (size != B.ret_min_size())
+    {
+        return true;
+    }
+    if (size == 0ull)
+    {
+        return false;
+    }
+    //std::cout << "LbLbLb\n";
+    //std::cout << "aho\n";
+    DList_Node<char>* apot = A.at_node(0ull);
+    //std::cout << "aho\n";
+    DList_Node<char>* bpot = B.at_node(0ull);
+    //std::cout << "aho\n";
+    if (apot->the_ele != bpot->the_ele)
+    {
+        //std::cout << "aho\n";
+        return true;
+    }
+    apot = apot->next;
+    bpot = bpot->next;
+    while (apot != A.at_node(0ull))
+    {
+        if (apot->the_ele != bpot->the_ele)
+        {
+            return true;
+        }
+        apot = apot->next;
+        bpot = bpot->next;
+            
+    }
+    return false;
+}
+
+bool operator<=(String A, String B)
+{
+    A.set_min_size();
+    B.set_min_size();
+    ullint size = A.ret_min_size();
+    if (size == 0ull && B.ret_min_size() == 0ull)
+    {
+        return true;
+    }
+    //std::cout << "LbLbLb\n";
+    //std::cout << "aho\n";
+    DList_Node<char>* apot = A.at_node(0ull);
+    //std::cout << "aho\n";
+    DList_Node<char>* bpot = B.at_node(0ull);
+    //std::cout << "aho\n";
+    if (apot->the_ele > bpot->the_ele)
+    {
+        //std::cout << "aho\n";
+        return false;
+    }
+    apot = apot->next;
+    bpot = bpot->next;
+    while (apot != A.at_node(0ull))
+    {
+        if (apot->the_ele > bpot->the_ele)
+        {
+            return false;
+        }
+        apot = apot->next;
+        bpot = bpot->next;
+            
+    }
+    return true;
+}
+
+bool operator>=(String A, String B)
+{
+    A.set_min_size();
+    B.set_min_size();
+    ullint size = A.ret_min_size();
+    if (size == 0ull && B.ret_min_size() == 0ull)
+    {
+        return true;
+    }
+    //std::cout << "LbLbLb\n";
+    //std::cout << "aho\n";
+    DList_Node<char>* apot = A.at_node(0ull);
+    //std::cout << "aho\n";
+    DList_Node<char>* bpot = B.at_node(0ull);
+    //std::cout << "aho\n";
+    if (apot->the_ele < bpot->the_ele)
+    {
+        //std::cout << "aho\n";
+        return false;
+    }
+    apot = apot->next;
+    bpot = bpot->next;
+    while (apot != A.at_node(0ull))
+    {
+        if (apot->the_ele < bpot->the_ele)
+        {
+            return false;
+        }
+        apot = apot->next;
+        bpot = bpot->next;
+            
+    }
+    return true;
+}
+
+bool operator<(String A, String B)
+{
+    A.set_min_size();
+    B.set_min_size();
+    ullint size = A.ret_min_size();
+    if (size == 0ull && B.ret_min_size() == 0ull)
+    {
+        return false;
+    }
+    //std::cout << "LbLbLb\n";
+    //std::cout << "aho\n";
+    DList_Node<char>* apot = A.at_node(0ull);
+    //std::cout << "aho\n";
+    DList_Node<char>* bpot = B.at_node(0ull);
+    //std::cout << "aho\n";
+    if (apot->the_ele >= bpot->the_ele)
+    {
+        //std::cout << "aho\n";
+        return false;
+    }
+    apot = apot->next;
+    bpot = bpot->next;
+    while (apot != A.at_node(0ull))
+    {
+        if (apot->the_ele >= bpot->the_ele)
+        {
+            return false;
+        }
+        apot = apot->next;
+        bpot = bpot->next;
+            
+    }
+    return true;
+}
+
+bool operator>(String A, String B)
+{
+    A.set_min_size();
+    B.set_min_size();
+    ullint size = A.ret_min_size();
+    if (size == 0ull && B.ret_min_size() == 0ull)
+    {
+        return false;
+    }
+    //std::cout << "LbLbLb\n";
+    //std::cout << "aho\n";
+    DList_Node<char>* apot = A.at_node(0ull);
+    //std::cout << "aho\n";
+    DList_Node<char>* bpot = B.at_node(0ull);
+    //std::cout << "aho\n";
+    if (apot->the_ele <= bpot->the_ele)
+    {
+        //std::cout << "aho\n";
+        return false;
+    }
+    apot = apot->next;
+    bpot = bpot->next;
+    while (apot != A.at_node(0ull))
+    {
+        if (apot->the_ele <= bpot->the_ele)
+        {
+            return false;
+        }
+        apot = apot->next;
+        bpot = bpot->next;
+            
+    }
+    return true;
+}
+
+#ifndef statement_String
+#define statement_String
+#endif
+#define mySTL_include_String
+#endif

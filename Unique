@@ -1,0 +1,52 @@
+#ifndef mySTL_512
+#ifndef ullint_type
+#include"ullint"
+#endif
+#endif
+
+template<typename Container>
+void Unique(Container &con, ullint &wei)
+{
+    ullint size = con.ret_size();
+    if (size == 0ull && size == 1ull)
+    {
+        return;
+    }
+    wei = 0;
+    Labelstart:
+    for (ullint i = 0ull; i < size - 1ull; i++)
+    {
+        for (ullint j = i + 1; j < size; j++)
+        {
+            if (con[i] == con[j])
+            {
+                for (ullint k = j; k < size - 1ull; k++)
+                {
+                    con[k] = con[k + 1];
+                }
+                ++wei;
+                --size;
+                goto Labelstart;
+                
+            }
+            
+        }
+        
+    }
+    /*Container res(size - wei);
+    for (ullint i = 0ull; i < size - 1ull; i++)
+    {
+        tmp[0ull] = con[i];
+        for (ullint j = i + 1; j < size; j++)
+        {
+            if (con[i] == con[j])
+            {
+                ++wei;
+            }
+            
+        }
+        
+    }*/
+    return;
+    
+}

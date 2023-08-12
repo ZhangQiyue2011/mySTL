@@ -1,0 +1,4 @@
+#ifndef ullint_type
+typedef unsigned long long int ullint;
+#define ullint_type
+#endif

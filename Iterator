@@ -1,0 +1,19 @@
+template <typename T>
+class Iterator
+{
+public:
+    T* val;
+
+public:
+    Iterator(): val(nullptr) {}
+    Iterator(T &v): val(&v) {}
+    Iterator &operator=(T &v)
+    {
+        val = &v;
+        return *this;
+    }
+    T &operator*()
+    {
+        return *val;
+    }
+};

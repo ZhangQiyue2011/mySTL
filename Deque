@@ -1,0 +1,583 @@
+#ifndef mySTL_include_Deque
+#ifndef mySTL_512
+#include<cstdlib>
+#endif
+#include"ullint"
+
+template<class T>
+class Deque
+{
+private:
+    T *dyarr;
+    ullint left;
+    ullint right;
+    ullint size;
+private:
+    Deque(T* zdyarr, ullint zleft, ullint zright, ullint zsize): dyarr(zdyarr), left(zleft), right(zright), size(zsize) {}
+public:
+    Deque(/* args */)
+    {
+        dyarr = (T*)malloc( sizeof(T) * 2 );
+        size = 2;
+        left = 0;
+        right = 0;
+        T* pot = dyarr + 1ull;
+        pot = new (pot)T();
+        
+    }
+    Deque(ullint ele)
+    {
+        dyarr = (T*)malloc( sizeof(T) * (ele + 1) );
+        size = ele + 1;
+        left = 0;
+        right = 0;
+        T* pot;
+        for (ullint i = 1; i < size; i++)
+        {
+            pot = dyarr + i;
+            pot = new ( pot )T();
+        }
+        
+    }
+    Deque(T an_ele, ullint ele)
+    {
+        dyarr = (T*)malloc( sizeof(T) * (ele + 1) );
+        size = ele + 1;
+        left = 0;
+        right = 0;
+        T* pot;
+        for (ullint i = 1; i < size; i++)
+        {
+            pot = dyarr + i;
+            pot = new ( pot )T();
+            dyarr[i] = an_ele;
+        }
+        
+    }
+    Deque(const Deque<T> &deq)
+    {
+        ullint ele = deq.ret_size();
+        dyarr = (T*)malloc( sizeof(T) * (ele + 1) );
+        T* pot;
+        for (ullint i = 0; i < ele; i++)
+        {
+            pot = dyarr + i;
+            pot = new ( pot )T( deq.operator[](i) );
+            //cout << i << endl;
+        }
+        size = ele + 1;
+        left = ele;
+        right = ele;
+    }
+    #ifdef statement_Vector
+    template<class TT> friend class Vector;
+    #endif
+    #ifdef statement_Vector
+    Deque(const Vector<T> &Vec)
+    {
+        ullint ele = Vec.ret_size();
+        this->dyarr = (T *)malloc( (ele + 1) * (ullint)sizeof(T) );
+        T* pot;
+        for (ullint i = 0; i < ele; i++)
+        {
+            pot = dyarr + i;
+            pot = new ( pot )T(Vec.operator[](i));
+        }
+        size = ele + 1;
+        left = ele;
+        right = ele;
+        //std::cout << ele << std::endl;
+    }
+    #endif
+    #ifdef statement_DList
+    template<typename TT> friend class DList;
+    #endif
+    #ifdef statement_DList
+    Deque(const DList<T> &dli)
+    {
+        DList_Node<T>* pot = dli.head;
+        this->size = dli.ret_size() + 1;
+        dyarr = (T *)malloc( size * (ullint)sizeof(T) );
+        T* tpot;
+        for (ullint i = 0ull; i < size - 1ull; ++i)
+        {
+            tpot = dyarr + i;
+            tpot = new ( tpot )T(pot->the_ele);
+            pot = pot->next;
+        }
+        this->left = this->size - 1;
+        this->right = this->size - 1;
+        
+    }
+    #endif
+    #ifdef statement_DList
+    Deque(const List<T> &dli)
+    {
+        List_Node<T>* pot = dli.head;
+        this->size = dli.ret_size() + 1;
+        dyarr = (T *)malloc( size * (ullint)sizeof(T) );
+        T* tpot;
+        for (ullint i = 0ull; i < size - 1ull; ++i)
+        {
+            tpot = dyarr + i;
+            tpot = new ( tpot )T(pot->the_ele);
+            pot = pot->next;
+        }
+        this->left = this->size - 1;
+        this->right = this->size - 1;
+        
+    }
+    #endif
+    Deque<T> & operator=(const Deque<T> &deq)
+    {
+        if (this != &deq)
+        {
+            for (ullint i = 0; i < size - 1ull; i++)
+            {
+                this->operator[](i).T::~T();
+            }
+            
+            free(dyarr);
+            
+            ullint ele = deq.ret_size();
+            dyarr = (T*)malloc( sizeof(T) * (ele + 1) );
+            T* pot;
+            for (ullint i = 0; i < ele; i++)
+            {
+                pot = dyarr + i;
+                pot = new ( pot )T( deq.operator[](i) );
+                //cout << i << endl;
+            }
+            size = ele + 1;
+            left = ele;
+            right = ele;
+        }
+        return *this;
+    }
+    #ifdef statement_Vector
+    Deque<T> & operator=(const Vector<T> &Vec)
+    {
+        for (ullint i = 0; i < size - 1ull; i++)
+        {
+            this->operator[](i).T::~T();
+        }
+        
+        free(dyarr);
+        ////
+        ullint ele = Vec.ret_size();
+        this->dyarr = (T *)malloc( (ele + 1) * (ullint)sizeof(T) );
+        T* pot;
+        for (ullint i = 0; i < ele; i++)
+        {
+            pot = dyarr + i;
+            pot = new ( pot )T(Vec.operator[](i));
+        }
+        size = ele + 1;
+        left = ele;
+        right = ele;
+        return *this;
+    }
+    #endif
+    #ifdef statement_DList
+    Deque<T> & operator=(const DList<T> &dli)
+    {
+        for (ullint i = 0; i < size - 1ull; i++)
+        {
+            this->operator[](i).T::~T();
+        }
+        
+        free(dyarr);
+        ////
+        DList_Node<T>* pot = dli.head;
+        this->size = dli.ret_size() + 1;
+        dyarr = (T *)malloc( size * (ullint)sizeof(T) );
+        T* tpot;
+        for (ullint i = 0ull; i < size - 1ull; ++i)
+        {
+            tpot = dyarr + i;
+            tpot = new ( tpot )T(pot->the_ele);
+            pot = pot->next;
+        }
+        this->left = this->size - 1;
+        this->right = this->size - 1;
+        return *this;
+    }
+    #endif
+    #ifdef statement_DList
+    Deque<T> & operator=(const List<T> &dli)
+    {
+        for (ullint i = 0; i < size - 1ull; i++)
+        {
+            this->operator[](i).T::~T();
+        }
+        
+        free(dyarr);
+        ////
+        List_Node<T>* pot = dli.head;
+        this->size = dli.ret_size() + 1;
+        dyarr = (T *)malloc( size * (ullint)sizeof(T) );
+        T* tpot;
+        for (ullint i = 0ull; i < size - 1ull; ++i)
+        {
+            tpot = dyarr + i;
+            tpot = new ( tpot )T(pot->the_ele);
+            pot = pot->next;
+        }
+        this->left = this->size - 1;
+        this->right = this->size - 1;
+        return *this;
+    }
+    #endif
+    void set_empty()
+    {
+        this->~Deque();
+        left = 0ull;
+        right = 1ull;
+    }
+    inline bool is_empty()
+    {
+        return (left + 1) % size == right;
+    }
+    inline bool is_full()
+    {
+        return left == right;
+    }
+    inline ullint ret_size() const
+    {
+        if (left >= right)
+        {
+            return (right - 0ull) + (size - 1ull - left);
+        }
+        else
+        {
+            return (right - left - 1ull);
+        }
+        
+    }
+    inline ullint ret_capa() const
+    {
+        return size - 1ull;
+    }
+    void push_front(T an_ele)
+    {
+        if ( is_full() )
+        {
+            set_size(size);
+        }
+        dyarr[left] = an_ele;
+        left = (left - 1 + size) % size;
+        
+    }
+    void push(T an_ele)
+    {
+        if ( is_full() )
+        {
+            set_size(size);
+        }
+        dyarr[right] = an_ele;
+        right = (right + 1) % size;
+        
+    }
+    T & operator[](ullint where) const
+    {
+        if (where >= size - 1)
+        {
+            throw "\n";
+        }
+        return dyarr[ (left + where + 1) % size ];
+        
+    }
+    #ifdef statement_Vector
+    operator Vector<T>()
+    {
+        ullint size = this->ret_size();
+        T* dyarr = (T *)malloc( size * (ullint)sizeof(T) );
+        T* pot;
+        for (ullint i = 0; i < size; i++)
+        {
+            pot = dyarr + i;
+            pot = new ( pot )T( this->operator[](i) );
+        }
+        Vector<T> res(dyarr, size);
+        return res;
+    }
+    #endif
+    #ifdef statement_DList
+    operator DList<T>()
+    {
+        ullint ele = this->ret_size();
+        DList_Node<T>* head;
+        
+        if (ele == 1ull)
+        {
+            head = new DList_Node<T>(this->operator[](0));
+            head->last = head;
+            head->next = head;
+            //size = 1ull;
+        }
+        else if (ele == 0ull)
+        {
+            DList<T> res(0ull);
+            return res;
+        }
+        
+        else
+        {
+            head = new DList_Node<T>(this->operator[](0));
+            DList_Node<T>* pot = head;
+            for (ullint i = 1; i < ele; i++)
+            {
+                pot->next = new DList_Node<T>(this->operator[](i));
+                pot->next->last = pot;
+                pot = pot->next;
+
+            }
+            pot->next = head;
+            pot->next->last = pot;
+            //size = ele;
+            
+        }
+        DList<T> res(head);
+        return res;
+        
+    }
+    #endif
+    #ifdef statement_List
+    operator List<T>()
+    {
+        List_Node<T>* head;
+        ullint ele = this->ret_size();
+
+        if (ele == 1ull)
+        {
+            head = new List_Node<T>( this->operator[](0) );
+            head->next = head;
+            //size = 1ull;
+        }
+        else if (ele == 0ull)
+        {
+            List<T> res(0ull);
+            return res;
+        }
+        else
+        {
+            head = new List_Node<T>( this->operator[](0) );
+            List_Node<T>* pot = head;
+            for (ullint i = 1; i < ele; i++)
+            {
+                pot->next = new List_Node<T>( this->operator[](i) );
+                pot = pot->next;
+
+            }
+            pot->next = head;
+            //size = ele;
+            
+        }
+        List<T> res(head);
+        return res;
+    }
+    #endif
+    T pop_front()
+    {
+        if ( is_empty() )
+        {
+            throw "";
+        }
+        ullint res = left;
+        left = (left + 1) % size;
+        return dyarr[res];
+        
+    }
+    T pop()
+    {
+        if ( is_empty() )
+        {
+            throw "";
+        }
+        ullint res = right;
+        right = (right - 1 + size) % size;
+        return dyarr[res];
+        
+    }
+    /*typedef bool(*Fp)(T, T);
+    void sort(Fp fp)
+    {
+        ullint size = ret_size();
+        if ( ret_size() == 0ull || ret_size() == 1ull)
+        {
+            return;
+        }
+        
+        T tmpt;
+        for (ullint i = 1ull; i < size; i++)
+        {
+            for (ullint j = 1ull; j <= size - i; j++)
+            {
+                if ( fp(this->operator[](j), this->operator[](j - 1ull)) )
+                {
+                    tmpt = this->operator[](j);
+                    this->operator[](j) = this->operator[](j - 1ull);
+                    this->operator[](j - 1ull) = tmpt;
+                }
+            }
+            
+        }
+        return;
+        
+    }
+    template<typename T2>
+    void sort(T2 ofunc)
+    {
+        ullint size = ret_size();
+        if ( ret_size() == 0ull || ret_size() == 1ull)
+        {
+            return;
+        }
+        
+        T tmpt;
+        for (ullint i = 1ull; i < size; i++)
+        {
+            for (ullint j = 1ull; j <= size - i; j++)
+            {
+                if ( ofunc(this->operator[](j), this->operator[](j - 1ull)) )
+                {
+                    tmpt = this->operator[](j);
+                    this->operator[](j) = this->operator[](j - 1ull);
+                    this->operator[](j - 1ull) = tmpt;
+                }
+            }
+            
+        }
+        return;
+    }*/
+    /*
+    void crlen(ullint add_ele)
+    {
+        ullint newsize = size + add_ele;
+        T* cdy = (T *)malloc( sizeof(T) * newsize );
+        if (left < right)
+        {
+            for (ullint i = left + 1ull; i < right; i++)
+            {
+                cdy[i] = dyarr[i];
+            }
+            
+        }
+        else
+        {
+            for (ullint i = left + 1ull; i < size; i++)
+            {
+                cdy[i + add_ele] = dyarr[i];
+            }
+            left += add_ele;
+            for (ullint i = 0ull; i < right; i++)
+            {
+                cdy[i] = dyarr[i];
+            }
+            
+            
+        }
+        size = newsize;
+        return;
+        
+        
+        
+        
+        
+    }*/
+    void set_size(ullint ele)
+    {
+        ullint esize = size - 1ull;
+        T* cdy = (T *)calloc(ele + 1, sizeof(T));
+        T* pot;
+        if (ele >= esize)
+        {
+            for (ullint i = 0; i < esize; i++)
+            {
+                pot = cdy + i;
+                pot = new ( pot )T();
+                cdy[i] = this->operator[](i);
+                this->operator[](i).T::~T();
+            }
+            for (ullint i = esize; i < ele; i++)
+            {
+                pot = (cdy + i);
+                pot = new (pot)T();
+            }
+            
+        }
+        else
+        {
+            for (ullint i = 0; i < ele; i++)
+            {
+                pot = cdy + i;
+                pot = new (pot)T();
+                cdy[i] = this->operator[](i);
+                this->operator[](i).T::~T();
+            }
+            
+            for (ullint i = ele; i < esize; i++)
+            {
+                this->operator[](i).T::~T();
+            }
+            
+        }
+        free(dyarr);
+        dyarr = cdy;
+        size = ele + 1;
+        left = ele;
+        right = ele;
+        
+        
+        
+    }
+    inline T* ret_dyarr()
+    {
+        return dyarr;
+    }
+    ~Deque()
+    {
+        for (ullint i = 0; i < size - 1ull; i++)
+        {
+            this->operator[](i).T::~T();
+        }
+        
+        free(dyarr);
+    }
+};
+
+template<typename T>
+Deque<T> operator+(const Deque<T> &lhs, const Deque<T> &rhs)
+{
+    ullint lsiz = lhs.ret_size();
+    ullint rsiz = rhs.ret_size();
+    if (lsiz == 0ull && rsiz == 0ull)
+    {
+        Deque<T> res(0ull);
+        return res;
+    }
+    else if (lsiz == 0ull)
+    {
+        return rhs;
+    }
+    else if (rsiz == 0ull)
+    {
+        return lhs;
+    }
+    Deque<T> res(lsiz + rsiz);
+    for (ullint i = 0; i < lsiz; i++)
+    {
+        res[i] = lhs[i];
+    }
+    
+    for (ullint i = 0; i < rsiz; i++)
+    {
+        res[i + lsiz] = rhs[i];
+    }
+    return res;
+}
+#ifndef statement_Deque
+#define statement_Deque
+#endif
+#define mySTL_include_Deque
+#endif

@@ -1,0 +1,129 @@
+#ifndef mySTL_include_Pair
+template <typename T1, typename T2>
+class Pair
+{
+public:
+    T1 First;
+    T2 Second;
+public:
+    Pair(): First(T1()), Second(T2()) {}
+    Pair(T1 f, T2 s): First(f), Second(s) {}
+    //template<typename T1, typename T2> friend bool operator==(Pair<T1, T2> pai1, Pair<T1, T2> pai2);
+};
+
+template<typename T1, typename T2>
+Pair<T1, T2> Make_Pair(T1 f, T2 s)
+{
+    return Pair<T1, T2>(f, s);
+}
+
+template<typename T1, typename T2>
+bool operator==(Pair<T1, T2> pai1, Pair<T1, T2> pai2)
+{
+    if ((pai1.First == pai2.First) && (pai2.Second == pai2.Second))
+    {
+        return true;
+    }
+    return false;
+    
+}
+
+template<typename T1, typename T2>
+bool operator<(Pair<T1, T2> pai1, Pair<T1, T2> pai2)
+{
+    if (pai1.First < pai2.First)
+    {
+        return true;
+    }
+    else if (pai1.First == pai2.First)
+    {
+        if (pai1.Second < pai2.Second)
+        {
+            return true;
+        }
+        return false;
+        
+    }
+    return false;
+    
+    
+}
+
+template<typename T1, typename T2>
+bool operator<=(Pair<T1, T2> pai1, Pair<T1, T2> pai2)
+{
+    if (pai1.First < pai2.First)
+    {
+        return true;
+    }
+    else if (pai1.First == pai2.First)
+    {
+        if (pai1.Second <= pai2.Second)
+        {
+            return true;
+        }
+        return false;
+        
+    }
+    return false;
+    
+    
+}
+
+template<typename T1, typename T2>
+bool operator>(Pair<T1, T2> pai1, Pair<T1, T2> pai2)
+{
+    if (pai1.First > pai2.First)
+    {
+        return true;
+    }
+    else if (pai1.First == pai2.First)
+    {
+        if (pai1.Second > pai2.Second)
+        {
+            return true;
+        }
+        return false;
+        
+    }
+    return false;
+    
+    
+}
+
+template<typename T1, typename T2>
+bool operator>=(Pair<T1, T2> pai1, Pair<T1, T2> pai2)
+{
+    if (pai1.First > pai2.First)
+    {
+        return true;
+    }
+    else if (pai1.First == pai2.First)
+    {
+        if (pai1.Second >= pai2.Second)
+        {
+            return true;
+        }
+        return false;
+        
+    }
+    return false;
+    
+    
+}
+
+template<typename T1, typename T2>
+bool operator!=(Pair<T1, T2> pai1, Pair<T1, T2> pai2)
+{
+    if (!((pai1.First == pai2.First) && (pai1.Second == pai2.Second)))
+    {
+        return true;
+    }
+    return false;
+    
+}
+#ifdef statement_Pair
+#define statement_Pair
+#endif
+#define mySTL_include_Pair
+#endif
